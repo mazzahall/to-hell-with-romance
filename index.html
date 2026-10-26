@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Love Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #05020a;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #ff66b2;
+            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f;
+        }
+
+        .text-display {
+            font-size: 5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        .heart-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 2s ease-in-out forwards;
+        }
+
+        .heart {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            background-color: #ff1493;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 40px #ff1493, 0 0 80px #ff1493;
+            animation: pulse 1.2s infinite;
+            margin-bottom: 40px;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 150px;
+            height: 150px;
+            background-color: #ff1493;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before {
+            top: -75px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 75px;
+            top: 0;
+        }
+
+        .heart-text {
+            position: absolute;
+            z-index: 3;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f;
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1) rotate(-45deg); }
+            50% { transform: scale(1.1) rotate(-45deg); }
+            100% { transform: scale(1) rotate(-45deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="content">
+        <div id="text" class="text-display"></div>
+        <div id="heart-wrapper" class="heart-container">
+            <div class="heart"></div>
+            <div class="heart-text">I Love You Sayang</div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Digital Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*♥❤';
+        const fontSize = 16;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 2, 10, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff3399';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 33);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Animation Sequence
+        const textElement = document.getElementById('text');
+        const heartWrapper = document.getElementById('heart-wrapper');
+
+        const sequence = [
+            { text: "3", duration: 1000 },
+            { text: "2", duration: 1000 },
+            { text: "1", duration: 1000 },
+            { text: "", duration: 1000 },
+            { text: "You", duration: 1200 },
+            { text: "Are", duration: 1200 },
+            { text: "My", duration: 1200 },
+            { text: "Love", duration: 1500 },
+            { text: "", duration: 1000 }
+        ];
+
+        let index = 0;
+
+        function runSequence() {
+            if (index < sequence.length) {
+                textElement.innerText = sequence[index].text;
+                setTimeout(() => {
+                    index++;
+                    runSequence();
+                }, sequence[index].duration);
+            } else {
+                textElement.style.display = 'none';
+                heartWrapper.style.display = 'flex';
+            }
+        }
+
+        runSequence();
+    </script>
+</body>
+</html>
